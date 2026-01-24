@@ -331,7 +331,7 @@
             <div class="controls">
                 <button class="btn-primary" onclick="generateSchedule()">Generate Schedule</button>
                 <button class="btn-secondary" onclick="resetAbsences()">Reset All Absences</button>
-                <button class="btn-danger" onclick="randomizeAbsences()">Randomize Absences (3-5 people)</button>
+                <button class="btn-danger" onclick="randomizeAbsences()">Randomize Absences (4 people)</button>
                 <button class="btn-secondary" onclick="reinitialize()">Reinitialize Everything</button>
             </div>
         </div>
@@ -612,7 +612,7 @@
             resetAbsences();
 
             const activeWorkers = people.filter(p => p.isActiveWorker);
-            const numAbsent = Math.floor(Math.random() * 3) + 3; // 3 to 5 people
+            const numAbsent = 4; // Always 4 people
 
             const shuffled = [...activeWorkers].sort(() => Math.random() - 0.5);
             const toMarkAbsent = shuffled.slice(0, numAbsent);
