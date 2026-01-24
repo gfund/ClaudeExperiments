@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Schedule App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ee5a5a;
+        }
+
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .person-card {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .person-card.active {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .person-card.inactive {
+            background: #f5f5f5;
+            border-color: #ccc;
+            opacity: 0.6;
+        }
+
+        .person-card.absent {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+
+        .person-card.vacation {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .person-card:hover {
+            transform: scale(1.05);
+        }
+
+        .person-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .person-status {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .person-jobs {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .job-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 2px;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .job-badge.assigned {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .no-assignment {
+            color: #999;
+            font-style: italic;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .jobs-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .job-item {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .schedule-table-container {
+            overflow-x: auto;
+        }
+
+        .round-header {
+            background: #667eea !important;
+        }
+
+        @media (max-width: 768px) {
+            .people-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Job Schedule App</h1>
+
+        <!-- Stats Panel -->
+        <div class="panel">
+            <h2>📊 Statistics</h2>
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-people">29</div>
+                    <div class="stat-label">Total People</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-workers">25</div>
+                    <div class="stat-label">Active Workers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="available-workers">25</div>
+                    <div class="stat-label">Available Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-jobs">24</div>
+                    <div class="stat-label">Total Jobs</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jobs Panel -->
+        <div class="panel">
+            <h2>🔧 Available Jobs (24)</h2>
+            <div class="jobs-list" id="jobs-list"></div>
+        </div>
+
+        <!-- People Panel -->
+        <div class="panel">
+            <h2>👥 People Management</h2>
+            <p style="color: #666; margin-bottom: 10px;">Click on a person to toggle their status (Available → Absent → Vacation → Available)</p>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e8f5e9; border: 2px solid #4caf50;"></div>
+                    <span>Active & Available</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f5f5f5; border: 2px solid #ccc;"></div>
+                    <span>Not Assigned (4 people)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffebee; border: 2px solid #f44336;"></div>
+                    <span>Absent</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #fff3e0; border: 2px solid #ff9800;"></div>
+                    <span>On Vacation</span>
+                </div>
+            </div>
+            <div class="people-grid" id="people-grid"></div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="panel">
+            <h2>⚙️ Controls</h2>
+            <div class="controls">
+                <button class="btn-primary" onclick="generateSchedule()">Generate Schedule</button>
+                <button class="btn-secondary" onclick="resetAbsences()">Reset All Absences</button>
+                <button class="btn-danger" onclick="randomizeAbsences()">Randomize Absences (3-5 people)</button>
+                <button class="btn-secondary" onclick="reinitialize()">Reinitialize Everything</button>
+            </div>
+        </div>
+
+        <!-- Schedule Results Panel -->
+        <div class="panel">
+            <h2>📅 Schedule Results</h2>
+            <p style="color: #666; margin-bottom: 10px;">Each person is assigned 4 different jobs (no repetition)</p>
+            <div class="schedule-table-container">
+                <table id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Person</th>
+                            <th>Capable Jobs</th>
+                            <th class="round-header">Round 1</th>
+                            <th class="round-header">Round 2</th>
+                            <th class="round-header">Round 3</th>
+                            <th class="round-header">Round 4</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const TOTAL_PEOPLE = 29;
+        const ACTIVE_WORKERS = 25;
+        const TOTAL_JOBS = 24;
+        const JOBS_PER_PERSON = 5;
+        const ROUNDS = 4;
+
+        // State
+        let people = [];
+        let jobs = [];
+        let schedule = [];
+
+        // Initialize the application
+        function init() {
+            // Create 24 jobs
+            jobs = [];
+            for (let i = 1; i <= TOTAL_JOBS; i++) {
+                jobs.push({
+                    id: i,
+                    name: `Job ${i}`
+                });
+            }
+
+            // Create 29 people
+            people = [];
+            for (let i = 1; i <= TOTAL_PEOPLE; i++) {
+                people.push({
+                    id: i,
+                    name: `Person ${i}`,
+                    isActiveWorker: false,
+                    capableJobs: [],
+                    status: 'available' // available, absent, vacation
+                });
+            }
+
+            // Randomly select 25 people to be active workers
+            const shuffledIndices = [...Array(TOTAL_PEOPLE).keys()].sort(() => Math.random() - 0.5);
+            const activeIndices = shuffledIndices.slice(0, ACTIVE_WORKERS);
+
+            activeIndices.forEach(index => {
+                people[index].isActiveWorker = true;
+                // Randomly assign 5 jobs to each active worker
+                const shuffledJobs = [...jobs].sort(() => Math.random() - 0.5);
+                people[index].capableJobs = shuffledJobs.slice(0, JOBS_PER_PERSON).map(j => j.id);
+            });
+
+            renderAll();
+        }
+
+        // Render all UI components
+        function renderAll() {
+            renderJobs();
+            renderPeople();
+            renderStats();
+            clearSchedule();
+        }
+
+        // Render jobs list
+        function renderJobs() {
+            const container = document.getElementById('jobs-list');
+            container.innerHTML = jobs.map(job =>
+                `<div class="job-item">${job.name}</div>`
+            ).join('');
+        }
+
+        // Render people grid
+        function renderPeople() {
+            const container = document.getElementById('people-grid');
+            container.innerHTML = people.map(person => {
+                let statusClass = person.isActiveWorker ? 'active' : 'inactive';
+                if (person.isActiveWorker) {
+                    if (person.status === 'absent') statusClass = 'absent';
+                    else if (person.status === 'vacation') statusClass = 'vacation';
+                }
+
+                let statusText = '';
+                if (!person.isActiveWorker) {
+                    statusText = 'Not assigned';
+                } else if (person.status === 'absent') {
+                    statusText = '❌ Absent';
+                } else if (person.status === 'vacation') {
+                    statusText = '🏖️ Vacation';
+                } else {
+                    statusText = '✅ Available';
+                }
+
+                const jobsText = person.isActiveWorker
+                    ? `Jobs: ${person.capableJobs.join(', ')}`
+                    : '';
+
+                return `
+                    <div class="person-card ${statusClass}" onclick="togglePersonStatus(${person.id})">
+                        <div class="person-name">${person.name}</div>
+                        <div class="person-status">${statusText}</div>
+                        <div class="person-jobs">${jobsText}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle person status
+        function togglePersonStatus(personId) {
+            const person = people.find(p => p.id === personId);
+            if (!person || !person.isActiveWorker) return;
+
+            const states = ['available', 'absent', 'vacation'];
+            const currentIndex = states.indexOf(person.status);
+            person.status = states[(currentIndex + 1) % states.length];
+
+            renderPeople();
+            renderStats();
+        }
+
+        // Render statistics
+        function renderStats() {
+            document.getElementById('total-people').textContent = TOTAL_PEOPLE;
+            document.getElementById('active-workers').textContent = ACTIVE_WORKERS;
+            document.getElementById('total-jobs').textContent = TOTAL_JOBS;
+
+            const availableCount = people.filter(p => p.isActiveWorker && p.status === 'available').length;
+            document.getElementById('available-workers').textContent = availableCount;
+        }
+
+        // Clear schedule table
+        function clearSchedule() {
+            document.getElementById('schedule-body').innerHTML = `
+                <tr>
+                    <td colspan="7" class="no-assignment">Click "Generate Schedule" to create assignments</td>
+                </tr>
+            `;
+        }
+
+        // Generate schedule
+        function generateSchedule() {
+            const availableWorkers = people.filter(p => p.isActiveWorker && p.status === 'available');
+
+            if (availableWorkers.length === 0) {
+                alert('No available workers! Please make sure at least one worker is available.');
+                return;
+            }
+
+            // For each worker, assign 4 different jobs from their capable jobs
+            schedule = availableWorkers.map(worker => {
+                const assignedJobs = [];
+                const availableJobs = [...worker.capableJobs];
+
+                // Assign up to 4 jobs without repetition
+                for (let round = 0; round < ROUNDS && availableJobs.length > 0; round++) {
+                    const randomIndex = Math.floor(Math.random() * availableJobs.length);
+                    assignedJobs.push(availableJobs[randomIndex]);
+                    availableJobs.splice(randomIndex, 1);
+                }
+
+                return {
+                    person: worker,
+                    assignments: assignedJobs
+                };
+            });
+
+            renderSchedule();
+        }
+
+        // Render schedule table
+        function renderSchedule() {
+            const tbody = document.getElementById('schedule-body');
+
+            // Include all active workers in the table
+            const activeWorkers = people.filter(p => p.isActiveWorker);
+
+            tbody.innerHTML = activeWorkers.map(worker => {
+                const workerSchedule = schedule.find(s => s.person.id === worker.id);
+
+                let statusBadge = '';
+                let roundsHtml = '';
+
+                if (worker.status === 'absent') {
+                    statusBadge = '<span style="color: #f44336;">❌ Absent</span>';
+                    roundsHtml = '<td colspan="4" class="no-assignment">Not available - Absent</td>';
+                } else if (worker.status === 'vacation') {
+                    statusBadge = '<span style="color: #ff9800;">🏖️ Vacation</span>';
+                    roundsHtml = '<td colspan="4" class="no-assignment">Not available - On Vacation</td>';
+                } else if (workerSchedule) {
+                    statusBadge = '<span style="color: #4caf50;">✅ Scheduled</span>';
+                    roundsHtml = [0, 1, 2, 3].map(round => {
+                        if (workerSchedule.assignments[round]) {
+                            return `<td><span class="job-badge assigned">Job ${workerSchedule.assignments[round]}</span></td>`;
+                        }
+                        return `<td class="no-assignment">-</td>`;
+                    }).join('');
+                } else {
+                    statusBadge = '<span style="color: #999;">⏳ Pending</span>';
+                    roundsHtml = '<td colspan="4" class="no-assignment">Generate schedule to assign</td>';
+                }
+
+                const capableJobsBadges = worker.capableJobs
+                    .map(j => `<span class="job-badge">Job ${j}</span>`)
+                    .join('');
+
+                // Adjust column span for absent/vacation
+                if (worker.status === 'absent' || worker.status === 'vacation' || !workerSchedule) {
+                    return `
+                        <tr>
+                            <td><strong>${worker.name}</strong></td>
+                            <td>${capableJobsBadges}</td>
+                            ${roundsHtml}
+                            <td>${statusBadge}</td>
+                        </tr>
+                    `;
+                }
+
+                return `
+                    <tr>
+                        <td><strong>${worker.name}</strong></td>
+                        <td>${capableJobsBadges}</td>
+                        ${roundsHtml}
+                        <td>${statusBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Add non-active workers at the bottom
+            const inactiveWorkers = people.filter(p => !p.isActiveWorker);
+            if (inactiveWorkers.length > 0) {
+                tbody.innerHTML += inactiveWorkers.map(worker => `
+                    <tr style="opacity: 0.5;">
+                        <td><strong>${worker.name}</strong></td>
+                        <td class="no-assignment">No jobs assigned</td>
+                        <td colspan="4" class="no-assignment">Not an active worker</td>
+                        <td><span style="color: #999;">N/A</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Reset all absences
+        function resetAbsences() {
+            people.forEach(person => {
+                if (person.isActiveWorker) {
+                    person.status = 'available';
+                }
+            });
+            renderPeople();
+            renderStats();
+            clearSchedule();
+        }
+
+        // Randomize absences (3-5 people)
+        function randomizeAbsences() {
+            resetAbsences();
+
+            const activeWorkers = people.filter(p => p.isActiveWorker);
+            const numAbsent = Math.floor(Math.random() * 3) + 3; // 3 to 5 people
+
+            const shuffled = [...activeWorkers].sort(() => Math.random() - 0.5);
+            const toMarkAbsent = shuffled.slice(0, numAbsent);
+
+            toMarkAbsent.forEach(worker => {
+                // Randomly choose between absent and vacation
+                worker.status = Math.random() > 0.5 ? 'absent' : 'vacation';
+            });
+
+            renderPeople();
+            renderStats();
+            clearSchedule();
+        }
+
+        // Reinitialize everything
+        function reinitialize() {
+            if (confirm('This will reset all data and randomize job assignments. Continue?')) {
+                init();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
