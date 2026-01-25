@@ -347,12 +347,30 @@ body::before {
     text-align: center;
 }
 
-.forecast-day .weather-icon.fa-sun {
+.forecast-day .weather-icon.fa-sun,
+.forecast-day .weather-icon.sunny {
     color: #FFD700;
 }
 
-.forecast-day .weather-icon.fa-cloud-rain {
+.forecast-day .weather-icon.fa-cloud-rain,
+.forecast-day .weather-icon.fa-snowflake,
+.forecast-day .weather-icon.rainy {
     color: #5AC8FA;
+}
+
+/* Loading state */
+.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: 'Loading...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
 }
 
 .forecast-day .precip {
