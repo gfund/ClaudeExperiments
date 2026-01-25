@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard - Greer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="weather-container">
+        <!-- Header -->
+        <header class="main-header">
+            <span class="location-label">MY LOCATION</span>
+            <h1 class="city-name">Greer</h1>
+            <div class="current-temp">29°</div>
+            <div class="feels-like-header">Feels Like: 21°</div>
+            <div class="high-low">H:34° L:21°</div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="weather-grid">
+            <!-- Severe Weather Alert -->
+            <div class="card severe-weather">
+                <div class="card-header">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <div>
+                        <strong>Severe Weather</strong>
+                        <span class="subtext">National Weather Service</span>
+                    </div>
+                </div>
+                <p class="alert-text">Ice Storm Warning. These conditions are expected to last until 1:00 PM, Monday, January 26.</p>
+                <span class="alert-count">1 alert</span>
+            </div>
+
+            <!-- Snow Stopping -->
+            <div class="card snow-stopping">
+                <h3>Snow Stopping</h3>
+                <p>Snow is expected to stop in 11 min.</p>
+                <div class="precipitation-timeline">
+                    <div class="timeline-bars">
+                        <div class="bar" style="height: 100%"></div>
+                        <div class="bar" style="height: 90%"></div>
+                        <div class="bar" style="height: 80%"></div>
+                        <div class="bar" style="height: 70%"></div>
+                        <div class="bar" style="height: 55%"></div>
+                        <div class="bar" style="height: 40%"></div>
+                        <div class="bar" style="height: 25%"></div>
+                        <div class="bar" style="height: 15%"></div>
+                        <div class="bar" style="height: 8%"></div>
+                        <div class="bar" style="height: 3%"></div>
+                        <div class="bar" style="height: 0%"></div>
+                    </div>
+                    <div class="timeline-labels">
+                        <span>Now</span>
+                        <span>10m</span>
+                        <span>20m</span>
+                        <span>30m</span>
+                        <span>40m</span>
+                        <span>50m</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Precipitation Map -->
+            <div class="card precipitation-map">
+                <div class="card-title">
+                    <i class="fa-solid fa-droplet"></i>
+                    PRECIPITATION
+                </div>
+                <div class="map-container">
+                    <div class="map-overlay">
+                        <div class="map-marker">
+                            <span class="marker-temp">29</span>
+                        </div>
+                    </div>
+                    <div class="map-labels">
+                        <span class="label" style="top: 15%; right: 25%;">Inman</span>
+                        <span class="label" style="top: 35%; left: 10%;">Travelers Rest</span>
+                        <span class="label" style="top: 50%; left: 20%;">Easley</span>
+                        <span class="label" style="top: 45%; right: 5%;">Spartanburg</span>
+                        <span class="label" style="top: 55%; right: 20%;">Simpsonville</span>
+                        <span class="label" style="top: 65%; right: 25%;">Piedmont</span>
+                        <span class="label" style="bottom: 15%; left: 15%;">Anderson</span>
+                        <span class="label" style="bottom: 10%; right: 10%;">Laurens</span>
+                        <span class="label my-location" style="top: 42%; right: 30%;">My Location</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hourly Forecast -->
+            <div class="card hourly-forecast">
+                <div class="card-title">
+                    <i class="fa-regular fa-clock"></i>
+                    HOURLY FORECAST
+                </div>
+                <div class="hourly-container">
+                    <div class="hour">
+                        <span class="time">Now</span>
+                        <i class="fa-solid fa-sun weather-icon"></i>
+                        <span class="temp">29°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">2PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="precip">60%</span>
+                        <span class="temp">29°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">3PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="precip">75%</span>
+                        <span class="temp">29°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">4PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="precip">85%</span>
+                        <span class="temp">30°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">5PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="precip">85%</span>
+                        <span class="temp">31°</span>
+                    </div>
+                    <div class="hour sunset-hour">
+                        <span class="time">5:51PM</span>
+                        <i class="fa-solid fa-sun weather-icon sunset-icon"></i>
+                        <span class="precip">75%</span>
+                        <span class="label-text">Sunset</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">6PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="temp">32°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">7PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="temp">32°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">8PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="temp">32°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">9PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="temp">33°</span>
+                    </div>
+                    <div class="hour">
+                        <span class="time">10PM</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="temp">34°</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10-Day Forecast -->
+            <div class="card ten-day-forecast">
+                <div class="card-title">
+                    <i class="fa-regular fa-calendar"></i>
+                    10-DAY FORECAST
+                </div>
+                <div class="forecast-list">
+                    <div class="forecast-day">
+                        <span class="day-name">Today</span>
+                        <i class="fa-solid fa-cloud-rain weather-icon"></i>
+                        <span class="precip">95%</span>
+                        <span class="low-temp">21°</span>
+                        <div class="temp-bar">
+                            <div class="bar-fill today-bar"></div>
+                            <div class="current-marker"></div>
+                        </div>
+                        <span class="high-temp">34°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="day-name">Mon</span>
+                        <i class="fa-solid fa-sun weather-icon"></i>
+                        <span class="low-temp">14°</span>
+                        <div class="temp-bar">
+                            <div class="bar-fill mon-bar"></div>
+                        </div>
+                        <span class="high-temp">39°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="day-name">Tue</span>
+                        <i class="fa-solid fa-sun weather-icon"></i>
+                        <span class="low-temp">11°</span>
+                        <div class="temp-bar">
+                            <div class="bar-fill tue-bar"></div>
+                        </div>
+                        <span class="high-temp">40°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="day-name">Wed</span>
+                        <i class="fa-solid fa-sun weather-icon"></i>
+                        <span class="low-temp">20°</span>
+                        <div class="temp-bar">
+                            <div class="bar-fill wed-bar"></div>
+                        </div>
+                        <span class="high-temp">41°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="day-name">Thu</span>
+                        <i class="fa-solid fa-cloud-sun weather-icon"></i>
+                        <span class="low-temp">21°</span>
+                        <div class="temp-bar">
+                            <div class="bar-fill thu-bar"></div>
+                        </div>
+                        <span class="high-temp">40°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="day-name">Fri</span>
+                        <i class="fa-solid fa-cloud weather-icon"></i>
+                        <span class="low-temp">22°</span>
+                        <div class="temp-bar">
+                            <div class="bar-fill fri-bar"></div>
+                        </div>
+                        <span class="high-temp">39°</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Air Quality -->
+            <div class="card air-quality">
+                <div class="card-title">
+                    <i class="fa-solid fa-wind"></i>
+                    AIR QUALITY
+                </div>
+                <div class="aqi-value">35</div>
+                <div class="aqi-label">Good</div>
+                <div class="aqi-bar">
+                    <div class="aqi-indicator"></div>
+                </div>
+                <p class="aqi-description">Air quality index is 35, which is similar to yesterday at about this time.</p>
+            </div>
+
+            <!-- Wind -->
+            <div class="card wind">
+                <div class="card-title">
+                    <i class="fa-solid fa-wind"></i>
+                    WIND
+                </div>
+                <div class="compass">
+                    <div class="compass-labels">
+                        <span class="direction n">N</span>
+                        <span class="direction e">E</span>
+                        <span class="direction s">S</span>
+                        <span class="direction w">W</span>
+                    </div>
+                    <div class="compass-center">
+                        <span class="wind-speed">7</span>
+                        <span class="wind-unit">mph</span>
+                    </div>
+                    <div class="wind-arrow"></div>
+                </div>
+                <div class="gusts">Gusts: 10 mph ENE</div>
+            </div>
+
+            <!-- Precipitation Stats -->
+            <div class="card precipitation-stats">
+                <div class="card-title">
+                    <i class="fa-solid fa-droplet"></i>
+                    PRECIPITATION
+                </div>
+                <div class="precip-value">4"</div>
+                <div class="precip-label">in last 24h</div>
+                <div class="precip-expected">.5" expected in<br>next 24h.</div>
+            </div>
+
+            <!-- UV Index -->
+            <div class="card uv-index">
+                <div class="card-title">
+                    <i class="fa-solid fa-sun"></i>
+                    UV INDEX
+                </div>
+                <div class="uv-value">3</div>
+                <div class="uv-label">Moderate</div>
+                <div class="uv-bar">
+                    <div class="uv-indicator"></div>
+                </div>
+                <div class="uv-advice">Use sun protection</div>
+            </div>
+
+            <!-- Sunset -->
+            <div class="card sunset">
+                <div class="card-title">
+                    <i class="fa-solid fa-sun"></i>
+                    SUNSET
+                </div>
+                <div class="sunset-time">5:51PM</div>
+                <div class="sun-arc">
+                    <svg viewBox="0 0 100 50" class="arc-svg">
+                        <path d="M 5 45 Q 50 -10 95 45" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                        <circle cx="75" cy="20" r="4" fill="#FFD700"/>
+                    </svg>
+                    <div class="horizon-line"></div>
+                </div>
+            </div>
+
+            <!-- Feels Like -->
+            <div class="card feels-like">
+                <div class="card-title">
+                    <i class="fa-solid fa-temperature-half"></i>
+                    FEELS LIKE
+                </div>
+                <div class="feels-temp">21°</div>
+                <div class="actual-temp">Actual: 29°</div>
+                <div class="feels-bar">
+                    <div class="feels-indicator"></div>
+                    <span class="feels-diff">-8°</span>
+                </div>
+                <div class="feels-description">Wind is making it</div>
+            </div>
+
+            <!-- Humidity -->
+            <div class="card humidity">
+                <div class="card-title">
+                    <i class="fa-solid fa-droplet"></i>
+                    HUMIDITY
+                </div>
+                <div class="humidity-value">82%</div>
+                <div class="dew-point">The dew point is 24°</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
