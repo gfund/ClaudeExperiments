@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steelman</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #141414;
+      --border:    #222222;
+      --muted:     #3a3a3a;
+      --subtle:    #888888;
+      --text:      #e8e8e8;
+      --bright:    #ffffff;
+      --accent:    #c8a96e;
+      --accent-dim:#7a6540;
+      --danger:    #e05050;
+      --coaching:  #1a1a2e;
+      --coaching-border: #2a2a4a;
+      --radius:    6px;
+      --font:      -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Screens ── */
+    .screen {
+      display: none;
+      min-height: 100vh;
+    }
+    .screen.active { display: flex; }
+
+    /* ── Landing ── */
+    #screen-landing {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    #screen-landing .wordmark {
+      font-size: clamp(48px, 10vw, 80px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--bright);
+    }
+
+    #screen-landing .tagline {
+      font-size: 18px;
+      color: var(--subtle);
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Setup ── */
+    #screen-setup {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .setup-card {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .setup-header {
+      text-align: center;
+    }
+
+    .setup-header h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--bright);
+      letter-spacing: -0.3px;
+    }
+
+    .setup-header p {
+      font-size: 14px;
+      color: var(--subtle);
+      margin-top: 6px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--subtle);
+    }
+
+    .field input,
+    .field textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      padding: 12px 14px;
+      width: 100%;
+      transition: border-color 0.15s;
+      resize: none;
+      outline: none;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--accent-dim);
+    }
+
+    /* ── Chat ── */
+    #screen-chat {
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+
+    .chat-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .chat-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--bright);
+      letter-spacing: -0.2px;
+    }
+
+    .chat-subtitle {
+      font-size: 12px;
+      color: var(--subtle);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      scroll-behavior: smooth;
+    }
+
+    /* Custom scrollbar */
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+    .msg-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 28px;
+    }
+
+    .msg {
+      max-width: 76%;
+      padding: 11px 15px;
+      border-radius: var(--radius);
+      font-size: 14.5px;
+      line-height: 1.55;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    .msg-ai {
+      align-self: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .msg-coaching {
+      align-self: flex-start;
+      max-width: 76%;
+      background: var(--coaching);
+      border: 1px solid var(--coaching-border);
+      border-radius: var(--radius);
+      padding: 12px 15px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .coaching-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .coaching-section {
+      margin-bottom: 6px;
+      color: var(--subtle);
+    }
+
+    .coaching-section:last-child { margin-bottom: 0; }
+
+    .coaching-key {
+      font-weight: 600;
+      color: #8899cc;
+    }
+
+    .coaching-fix .coaching-key {
+      color: var(--accent);
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 15px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .chat-footer {
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      flex-shrink: 0;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    #chat-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14.5px;
+      line-height: 1.5;
+      padding: 10px 14px;
+      resize: none;
+      outline: none;
+      max-height: 120px;
+      overflow-y: auto;
+      transition: border-color 0.15s;
+    }
+
+    #chat-input:focus { border-color: var(--accent-dim); }
+    #chat-input::placeholder { color: var(--muted); }
+
+    /* ── Summary ── */
+    #screen-summary {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 24px;
+      overflow-y: auto;
+    }
+
+    .summary-card {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding-bottom: 40px;
+    }
+
+    .summary-header {
+      text-align: center;
+    }
+
+    .summary-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--bright);
+      letter-spacing: -0.4px;
+    }
+
+    .summary-header p {
+      font-size: 13px;
+      color: var(--subtle);
+      margin-top: 6px;
+    }
+
+    .summary-body {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .summary-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      outline: none;
+      letter-spacing: 0.1px;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d0d0d;
+      padding: 13px 28px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #d4b57a;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--subtle);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      border-color: var(--muted);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid #3a1a1a;
+      padding: 10px 18px;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #1a0a0a;
+    }
+
+    .btn-send {
+      background: var(--accent);
+      color: #0d0d0d;
+      padding: 10px 16px;
+      flex-shrink: 0;
+      height: 40px;
+    }
+
+    .btn-send:hover:not(:disabled) {
+      background: #d4b57a;
+    }
+
+    /* ── API key field ── */
+    .api-key-field {
+      position: relative;
+    }
+
+    .api-key-field input {
+      padding-right: 80px;
+    }
+
+    .api-key-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--subtle);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: var(--font);
+      padding: 4px;
+    }
+
+    .api-key-toggle:hover { color: var(--text); }
+
+    /* ── Error toast ── */
+    #error-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #2a1010;
+      border: 1px solid #5a2020;
+      border-radius: var(--radius);
+      color: #ff8888;
+      font-size: 13px;
+      padding: 10px 18px;
+      max-width: 420px;
+      text-align: center;
+      transition: transform 0.25s ease;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    #error-toast.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Session counter ── */
+    .turn-count {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── Streaming cursor ── */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 1px;
+      animation: blink 0.8s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ── Empty state ── */
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 20px;
+    }
+
+    .chat-empty .icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+
+    .chat-empty p {
+      font-size: 14px;
+      max-width: 280px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 1 — LANDING
+═══════════════════════════════════════════════════════════ -->
+<div id="screen-landing" class="screen active">
+  <div class="wordmark">Steelman</div>
+  <div class="tagline">Walk in ready.</div>
+  <button class="btn btn-primary" onclick="showSetup()">Start Session</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 2 — SETUP
+═══════════════════════════════════════════════════════════ -->
+<div id="screen-setup" class="screen">
+  <div class="setup-card">
+    <div class="setup-header">
+      <h2>Set the stage</h2>
+      <p>We'll build the conversation around who you're facing and what you need.</p>
+    </div>
+
+    <div class="field">
+      <label>Anthropic API Key</label>
+      <div class="api-key-field">
+        <input type="password" id="api-key" placeholder="sk-ant-..." autocomplete="off" />
+        <button class="api-key-toggle" onclick="toggleApiKey()">Show</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Who are you talking to?</label>
+      <input type="text" id="setup-person"
+        placeholder="e.g. my manager, my father, my ex, a VC"
+        maxlength="120" />
+    </div>
+
+    <div class="field">
+      <label>What do you want to walk away with?</label>
+      <textarea id="setup-goal" rows="3"
+        placeholder="e.g. a raise, an apology, their blessing, a yes on the deal"
+        maxlength="400"></textarea>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button class="btn btn-secondary" onclick="showLanding()">Back</button>
+      <button class="btn btn-primary" style="flex:1" onclick="startSession()">Begin</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 3 — CHAT
+═══════════════════════════════════════════════════════════ -->
+<div id="screen-chat" class="screen">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-title" id="chat-title">Session</div>
+      <div class="chat-subtitle" id="chat-subtitle"></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="turn-count" id="turn-count"></span>
+      <button class="btn btn-danger" onclick="endSession()">End Session</button>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-empty" id="chat-empty">
+      <div class="icon">⚡</div>
+      <p>Say something. This is your practice rep.</p>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <div class="chat-input-row">
+      <textarea id="chat-input" rows="1"
+        placeholder="Say what you'd say in the real conversation…"
+        onkeydown="handleInputKey(event)"
+        oninput="autoResize(this)"></textarea>
+      <button class="btn btn-send" id="send-btn" onclick="sendMessage()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M1.5 8L14.5 2L8.5 14L7 9L1.5 8Z"
+            fill="currentColor" stroke="currentColor" stroke-width="0.5"
+            stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 4 — SUMMARY
+═══════════════════════════════════════════════════════════ -->
+<div id="screen-summary" class="screen">
+  <div class="summary-card">
+    <div class="summary-header">
+      <h2>Session Complete</h2>
+      <p id="summary-meta"></p>
+    </div>
+    <div class="summary-body" id="summary-body">Analyzing your session…</div>
+    <div class="summary-actions">
+      <button class="btn btn-secondary" onclick="restartWithSamePerson()">Same Person, Again</button>
+      <button class="btn btn-primary" onclick="showSetup()">New Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ERROR TOAST
+═══════════════════════════════════════════════════════════ -->
+<div id="error-toast"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const state = {
+  apiKey: '',
+  person: '',
+  goal: '',
+  messages: [],   // [{role, content}] for API
+  turnCount: 0,
+  isStreaming: false,
+};
+
+// ── Navigation ──────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function showLanding() { showScreen('landing'); }
+
+function showSetup() {
+  showScreen('setup');
+  // Restore values if coming back
+  document.getElementById('api-key').value = state.apiKey || '';
+  document.getElementById('setup-person').value = state.person || '';
+  document.getElementById('setup-goal').value = state.goal || '';
+}
+
+// ── Setup screen ────────────────────────────────────────────────────────────
+function toggleApiKey() {
+  const input = document.getElementById('api-key');
+  const btn = document.querySelector('.api-key-toggle');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'Show';
+  }
+}
+
+function startSession() {
+  const apiKey = document.getElementById('api-key').value.trim();
+  const person = document.getElementById('setup-person').value.trim();
+  const goal   = document.getElementById('setup-goal').value.trim();
+
+  if (!apiKey)  { showError('Enter your Anthropic API key to continue.'); return; }
+  if (!person)  { showError('Tell us who you\'re talking to.'); return; }
+  if (!goal)    { showError('Tell us what you want to walk away with.'); return; }
+
+  state.apiKey  = apiKey;
+  state.person  = person;
+  state.goal    = goal;
+  state.messages = [];
+  state.turnCount = 0;
+
+  // Build system prompt
+  state.systemPrompt = buildSystemPrompt(person, goal);
+
+  // Reset chat UI
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `<div class="chat-empty" id="chat-empty">
+    <div class="icon">⚡</div>
+    <p>Say something. This is your practice rep.</p>
+  </div>`;
+  document.getElementById('chat-title').textContent = person;
+  document.getElementById('chat-subtitle').textContent = goal.length > 60 ? goal.slice(0, 57) + '…' : goal;
+  document.getElementById('turn-count').textContent = '';
+  document.getElementById('chat-input').value = '';
+
+  showScreen('chat');
+  document.getElementById('chat-input').focus();
+}
+
+function buildSystemPrompt(person, goal) {
+  return `You are playing the role of: ${person}
+
+The user is practicing a real conversation with you. Their goal is: ${goal}
+
+YOUR INSTRUCTIONS:
+1. Stay fully in character as ${person}. Be realistic — use the real dynamics of this kind of relationship. Push back, challenge, deflect, pull rank, use guilt, interrupt, go silent, get defensive, whatever this person would actually do. Don't be a pushover. Don't make it easy.
+
+2. After EVERY response you give in character, add a coaching note separated by exactly this marker on its own line:
+---COACHING---
+Then write a tight, honest coaching note with exactly these three labeled lines:
+LANDED: [what actually worked in the user's message — be specific, one sentence]
+WEAK: [what undermined them — a specific word, phrase, or tactic that backfired or was missing]
+FIX: [one concrete, actionable thing to do differently next time — a specific phrase or approach]
+
+Keep the coaching sharp. One sentence each. No fluff. You are a sparring partner, not a therapist.
+
+Example format:
+[Your in-character response as ${person}]
+
+---COACHING---
+LANDED: You named the specific number upfront which showed you'd done the math.
+WEAK: "I was hoping" signals uncertainty — it sounds like a request for permission, not a negotiation.
+FIX: Replace "I was hoping" with "I'm asking for" and pause after the number.`;
+}
+
+// ── Chat ────────────────────────────────────────────────────────────────────
+function handleInputKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    if (!state.isStreaming) sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || state.isStreaming) return;
+
+  // Remove empty state
+  const emptyState = document.getElementById('chat-empty');
+  if (emptyState) emptyState.remove();
+
+  // Add user message
+  input.value = '';
+  input.style.height = 'auto';
+  appendUserMessage(text);
+
+  state.messages.push({ role: 'user', content: text });
+  state.turnCount++;
+  document.getElementById('turn-count').textContent = `Turn ${state.turnCount}`;
+
+  // Lock UI
+  state.isStreaming = true;
+  document.getElementById('send-btn').disabled = true;
+  input.disabled = true;
+
+  // Show typing indicator
+  const typingEl = appendTypingIndicator();
+
+  try {
+    await streamResponse(typingEl);
+  } catch (err) {
+    typingEl.remove();
+    showError(err.message || 'Something went wrong. Check your API key and try again.');
+  } finally {
+    state.isStreaming = false;
+    document.getElementById('send-btn').disabled = false;
+    input.disabled = false;
+    input.focus();
+  }
+}
+
+async function streamResponse(typingEl) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': state.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-6',
+      max_tokens: 1024,
+      system: state.systemPrompt,
+      messages: state.messages,
+      stream: true,
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `API error ${response.status}`);
+  }
+
+  // Remove typing indicator and add AI message bubble
+  typingEl.remove();
+
+  const group = document.createElement('div');
+  group.className = 'msg-group';
+
+  const aiMsg = document.createElement('div');
+  aiMsg.className = 'msg msg-ai';
+  group.appendChild(aiMsg);
+
+  const chatMsgs = document.getElementById('chat-messages');
+  chatMsgs.appendChild(group);
+
+  // Stream
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let fullText = '';
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop(); // keep incomplete line
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6).trim();
+      if (data === '[DONE]') continue;
+
+      let parsed;
+      try { parsed = JSON.parse(data); } catch { continue; }
+
+      if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+        fullText += parsed.delta.text;
+        renderStreamChunk(aiMsg, group, fullText);
+        scrollToBottom();
+      }
+    }
+  }
+
+  // Final render — clean up cursor if any
+  renderFinal(aiMsg, group, fullText);
+
+  // Add to API history (just the character response, not coaching)
+  const charResponse = fullText.split('---COACHING---')[0].trim();
+  state.messages.push({ role: 'assistant', content: charResponse });
+
+  scrollToBottom();
+}
+
+function renderStreamChunk(aiMsg, group, text) {
+  const coachingIdx = text.indexOf('---COACHING---');
+
+  if (coachingIdx === -1) {
+    // Only character response so far
+    aiMsg.innerHTML = escapeHtml(text) + '<span class="cursor"></span>';
+  } else {
+    // We have both parts — render character response
+    const charPart = text.slice(0, coachingIdx).trim();
+    aiMsg.innerHTML = escapeHtml(charPart);
+
+    // Coaching in progress
+    const coachingRaw = text.slice(coachingIdx + 14).trim();
+    let coachingEl = group.querySelector('.msg-coaching');
+    if (!coachingEl) {
+      coachingEl = document.createElement('div');
+      coachingEl.className = 'msg-coaching';
+      coachingEl.innerHTML = `<div class="coaching-label">Coach</div>`;
+      group.appendChild(coachingEl);
+    }
+    renderCoachingPartial(coachingEl, coachingRaw, true);
+  }
+}
+
+function renderFinal(aiMsg, group, text) {
+  const coachingIdx = text.indexOf('---COACHING---');
+
+  if (coachingIdx === -1) {
+    aiMsg.innerHTML = escapeHtml(text);
+    return;
+  }
+
+  const charPart    = text.slice(0, coachingIdx).trim();
+  const coachingRaw = text.slice(coachingIdx + 14).trim();
+
+  aiMsg.innerHTML = escapeHtml(charPart);
+
+  let coachingEl = group.querySelector('.msg-coaching');
+  if (!coachingEl) {
+    coachingEl = document.createElement('div');
+    coachingEl.className = 'msg-coaching';
+    coachingEl.innerHTML = `<div class="coaching-label">Coach</div>`;
+    group.appendChild(coachingEl);
+  }
+  renderCoachingPartial(coachingEl, coachingRaw, false);
+}
+
+function renderCoachingPartial(el, text, streaming) {
+  const landed = extractLabel(text, 'LANDED');
+  const weak   = extractLabel(text, 'WEAK');
+  const fix    = extractLabel(text, 'FIX');
+
+  let html = `<div class="coaching-label">Coach</div>`;
+
+  if (landed) {
+    html += `<div class="coaching-section"><span class="coaching-key">Landed</span> ${escapeHtml(landed)}</div>`;
+  }
+  if (weak) {
+    html += `<div class="coaching-section"><span class="coaching-key">Weak</span> ${escapeHtml(weak)}</div>`;
+  }
+  if (fix) {
+    html += `<div class="coaching-section coaching-fix"><span class="coaching-key">Fix</span> ${escapeHtml(fix)}</div>`;
+  }
+
+  if (streaming && !fix) {
+    html += '<span class="cursor"></span>';
+  }
+
+  el.innerHTML = html;
+}
+
+function extractLabel(text, label) {
+  const re = new RegExp(label + ':\\s*(.+?)(?=\\n[A-Z]+:|$)', 's');
+  const m = text.match(re);
+  return m ? m[1].trim() : null;
+}
+
+function appendUserMessage(text) {
+  const emptyEl = document.getElementById('chat-empty');
+  if (emptyEl) emptyEl.remove();
+
+  const group = document.createElement('div');
+  group.className = 'msg-group';
+
+  const msg = document.createElement('div');
+  msg.className = 'msg msg-user';
+  msg.textContent = text;
+
+  group.appendChild(msg);
+  document.getElementById('chat-messages').appendChild(group);
+  scrollToBottom();
+}
+
+function appendTypingIndicator() {
+  const el = document.createElement('div');
+  el.className = 'typing-indicator';
+  el.innerHTML = `
+    <div class="typing-dot"></div>
+    <div class="typing-dot"></div>
+    <div class="typing-dot"></div>`;
+  document.getElementById('chat-messages').appendChild(el);
+  scrollToBottom();
+  return el;
+}
+
+function scrollToBottom() {
+  const msgs = document.getElementById('chat-messages');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── End session ─────────────────────────────────────────────────────────────
+async function endSession() {
+  if (state.messages.length === 0) {
+    showLanding();
+    return;
+  }
+
+  showScreen('summary');
+
+  const meta = `${state.person} · ${state.turnCount} turn${state.turnCount !== 1 ? 's' : ''}`;
+  document.getElementById('summary-meta').textContent = meta;
+  document.getElementById('summary-body').textContent = 'Analyzing your session…';
+
+  try {
+    const summary = await getSummary();
+    document.getElementById('summary-body').textContent = summary;
+  } catch {
+    document.getElementById('summary-body').textContent =
+      'Could not generate summary. Your session is complete.';
+  }
+}
+
+async function getSummary() {
+  const transcript = state.messages
+    .map(m => `${m.role === 'user' ? 'YOU' : state.person.toUpperCase()}: ${m.content}`)
+    .join('\n\n');
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': state.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-6',
+      max_tokens: 600,
+      messages: [{
+        role: 'user',
+        content: `You are Steelman, a conversation coach. Analyze this practice session and give a performance summary.
+
+CONTEXT:
+- Person: ${state.person}
+- Goal: ${state.goal}
+
+TRANSCRIPT:
+${transcript}
+
+Write a concise performance summary (4–6 sentences) covering:
+1. Overall assessment of how they performed
+2. Their strongest moment and why it worked
+3. Their biggest recurring weakness
+4. One specific thing to work on before the real conversation
+
+Be honest and direct. No padding. This person wants to win the real conversation.`,
+      }],
+    }),
+  });
+
+  if (!response.ok) throw new Error('Summary failed');
+  const data = await response.json();
+  return data.content?.[0]?.text || 'Session complete.';
+}
+
+function restartWithSamePerson() {
+  state.messages = [];
+  state.turnCount = 0;
+
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = `<div class="chat-empty" id="chat-empty">
+    <div class="icon">⚡</div>
+    <p>Say something. This is your practice rep.</p>
+  </div>`;
+
+  document.getElementById('turn-count').textContent = '';
+  document.getElementById('chat-input').value = '';
+
+  showScreen('chat');
+  document.getElementById('chat-input').focus();
+}
+
+// ── Utilities ────────────────────────────────────────────────────────────────
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/\n/g, '<br>');
+}
+
+function showError(msg) {
+  const toast = document.getElementById('error-toast');
+  toast.textContent = msg;
+  toast.classList.add('visible');
+  clearTimeout(showError._timer);
+  showError._timer = setTimeout(() => toast.classList.remove('visible'), 4000);
+}
+</script>
+</body>
+</html>
