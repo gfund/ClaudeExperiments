@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Steelman</title>
+  <title>STEELMAN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0d0d0d;
-      --surface:   #141414;
-      --border:    #222222;
-      --muted:     #3a3a3a;
-      --subtle:    #888888;
-      --text:      #e8e8e8;
-      --bright:    #ffffff;
-      --accent:    #c8a96e;
-      --accent-dim:#7a6540;
-      --danger:    #e05050;
-      --coaching:  #1a1a2e;
-      --coaching-border: #2a2a4a;
-      --radius:    6px;
-      --font:      -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      --bg:        #0c0c0c;
+      --surface:   #111111;
+      --elevated:  #181818;
+      --border:    rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.16);
+      --muted:     #333333;
+      --subtle:    #666666;
+      --text:      #e2e2e2;
+      --bright:    #f5f5f5;
+      --silver:    #b8b8b8;
+      --red:       #c0392b;
+      --red-hi:    #e74c3c;
+      --font:      'Inter', -apple-system, "SF Pro Display", sans-serif;
     }
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
@@ -35,79 +39,115 @@
     }
 
     /* ── Screens ── */
-    .screen {
-      display: none;
-      min-height: 100vh;
-    }
+    .screen { display: none; min-height: 100vh; }
     .screen.active { display: flex; }
 
-    /* ── Landing ── */
+    /* ═══════════════ LANDING ═══════════════ */
     #screen-landing {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 0;
       text-align: center;
-      padding: 40px 24px;
+      padding: 60px 24px;
+      position: relative;
+      overflow: hidden;
     }
 
-    #screen-landing .wordmark {
-      font-size: clamp(48px, 10vw, 80px);
+    #screen-landing::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 55% at 50% 45%,
+        rgba(192,57,43,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .landing-logo {
+      width: 160px;
+      height: 185px;
+      margin-bottom: 36px;
+      filter:
+        drop-shadow(0 0 32px rgba(192,57,43,0.28))
+        drop-shadow(0 12px 40px rgba(0,0,0,0.7));
+    }
+
+    .wordmark {
+      font-size: clamp(32px, 7vw, 52px);
       font-weight: 700;
-      letter-spacing: -2px;
-      color: var(--bright);
-    }
-
-    #screen-landing .tagline {
-      font-size: 18px;
-      color: var(--subtle);
-      letter-spacing: 0.5px;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #777 0%, #ccc 35%, #f0f0f0 50%, #bbb 65%, #777 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin-bottom: 12px;
     }
 
-    /* ── Setup ── */
+    .tagline {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--subtle);
+      letter-spacing: 2px;
+      margin-bottom: 44px;
+    }
+
+    /* ═══════════════ SETUP ═══════════════ */
     #screen-setup {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 24px;
+      padding: 48px 24px;
     }
 
     .setup-card {
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: 26px;
     }
 
-    .setup-header {
-      text-align: center;
+    .setup-logo-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .setup-logo-bar svg { width: 28px; height: 32px; }
+
+    .setup-logo-bar .mark {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--silver);
     }
 
     .setup-header h2 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
       color: var(--bright);
-      letter-spacing: -0.3px;
+      letter-spacing: -0.2px;
+      margin-bottom: 6px;
     }
 
     .setup-header p {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--subtle);
-      margin-top: 6px;
+      line-height: 1.6;
     }
 
     .field {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .field label {
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
       color: var(--subtle);
     }
@@ -116,28 +156,24 @@
     .field textarea {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
       color: var(--text);
       font-family: var(--font);
-      font-size: 15px;
-      padding: 12px 14px;
+      font-size: 14px;
+      padding: 11px 14px;
       width: 100%;
       transition: border-color 0.15s;
       resize: none;
       outline: none;
+      border-radius: 2px;
     }
 
     .field input::placeholder,
-    .field textarea::placeholder {
-      color: var(--muted);
-    }
+    .field textarea::placeholder { color: var(--muted); }
 
     .field input:focus,
-    .field textarea:focus {
-      border-color: var(--accent-dim);
-    }
+    .field textarea:focus { border-color: var(--border-hi); }
 
-    /* ── Chat ── */
+    /* ═══════════════ CHAT ═══════════════ */
     #screen-chat {
       flex-direction: column;
       height: 100vh;
@@ -148,7 +184,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px;
+      padding: 13px 20px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
       background: var(--surface);
@@ -156,156 +192,185 @@
 
     .chat-header-left {
       display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .chat-header-left svg { width: 22px; height: 26px; flex-shrink: 0; }
+
+    .chat-header-brand { font-size: 11px; font-weight: 700; letter-spacing: 3.5px; color: var(--silver); }
+
+    .chat-sep { width: 1px; height: 18px; background: var(--border); }
+
+    .chat-header-ctx {
+      display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .chat-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--bright);
-      letter-spacing: -0.2px;
     }
 
     .chat-subtitle {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--subtle);
     }
 
     .chat-messages {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 20px;
+      padding: 32px 24px;
       display: flex;
       flex-direction: column;
       gap: 0;
       scroll-behavior: smooth;
     }
 
-    /* Custom scrollbar */
-    .chat-messages::-webkit-scrollbar { width: 4px; }
+    @media (min-width: 700px) { .chat-messages { padding: 32px 48px; } }
+
+    .chat-messages::-webkit-scrollbar { width: 3px; }
     .chat-messages::-webkit-scrollbar-track { background: transparent; }
-    .chat-messages::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+    .msgs-center {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
 
     .msg-group {
       display: flex;
       flex-direction: column;
-      margin-bottom: 28px;
+      margin-bottom: 30px;
+    }
+
+    .msg-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
     }
 
     .msg {
-      max-width: 76%;
-      padding: 11px 15px;
-      border-radius: var(--radius);
-      font-size: 14.5px;
-      line-height: 1.55;
+      max-width: 80%;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.65;
+      border-radius: 2px;
     }
 
     .msg-user {
       align-self: flex-end;
-      background: #1e1e1e;
+      background: var(--elevated);
       border: 1px solid var(--border);
       color: var(--text);
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
+
+    .msg-user-label { align-self: flex-end; }
 
     .msg-ai {
       align-self: flex-start;
       background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text);
-      margin-bottom: 12px;
+      color: var(--silver);
+      margin-bottom: 10px;
     }
 
+    /* Coaching note */
     .msg-coaching {
       align-self: flex-start;
-      max-width: 76%;
-      background: var(--coaching);
-      border: 1px solid var(--coaching-border);
-      border-radius: var(--radius);
-      padding: 12px 15px;
+      max-width: 80%;
+      background: #0f0f0f;
+      border-left: 2px solid var(--red);
+      padding: 12px 16px;
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.65;
+      border-radius: 0 2px 2px 0;
     }
 
     .coaching-label {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      letter-spacing: 1.2px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
+      color: var(--red-hi);
+      margin-bottom: 10px;
     }
 
     .coaching-section {
-      margin-bottom: 6px;
-      color: var(--subtle);
+      display: flex;
+      gap: 10px;
+      margin-bottom: 7px;
+      color: #777;
+      align-items: flex-start;
     }
-
     .coaching-section:last-child { margin-bottom: 0; }
 
-    .coaching-key {
-      font-weight: 600;
-      color: #8899cc;
-    }
+    .coaching-icon { flex-shrink: 0; font-style: normal; margin-top: 1px; }
+    .coaching-icon.landed { color: #5a9a5a; }
+    .coaching-icon.weak   { color: var(--red-hi); }
+    .coaching-icon.fix    { color: var(--silver); }
 
-    .coaching-fix .coaching-key {
-      color: var(--accent);
-    }
+    .coaching-text { font-size: 13px; line-height: 1.6; }
 
-    /* Typing indicator */
+    /* Typing */
     .typing-indicator {
       align-self: flex-start;
       display: flex;
       align-items: center;
       gap: 5px;
-      padding: 12px 15px;
+      padding: 12px 16px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 2px;
       margin-bottom: 16px;
     }
 
     .typing-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--muted);
       animation: pulse 1.2s ease-in-out infinite;
     }
-
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
     @keyframes pulse {
       0%, 100% { opacity: 0.3; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1); }
     }
 
     .chat-footer {
       border-top: 1px solid var(--border);
-      padding: 14px 20px;
+      padding: 14px 24px;
       flex-shrink: 0;
       background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
     .chat-input-row {
       display: flex;
       gap: 10px;
       align-items: flex-end;
+      max-width: 680px;
+      margin: 0 auto;
     }
 
     #chat-input {
       flex: 1;
-      background: var(--bg);
+      background: var(--elevated);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 2px;
       color: var(--text);
       font-family: var(--font);
-      font-size: 14.5px;
+      font-size: 14px;
       line-height: 1.5;
       padding: 10px 14px;
       resize: none;
@@ -314,16 +379,15 @@
       overflow-y: auto;
       transition: border-color 0.15s;
     }
-
-    #chat-input:focus { border-color: var(--accent-dim); }
+    #chat-input:focus { border-color: var(--border-hi); }
     #chat-input::placeholder { color: var(--muted); }
 
-    /* ── Summary ── */
+    /* ═══════════════ SUMMARY ═══════════════ */
     #screen-summary {
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 40px 24px;
+      padding: 48px 24px;
       overflow-y: auto;
     }
 
@@ -333,18 +397,23 @@
       display: flex;
       flex-direction: column;
       gap: 28px;
-      padding-bottom: 40px;
+      padding-bottom: 48px;
     }
 
-    .summary-header {
-      text-align: center;
+    .summary-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--red-hi);
+      margin-bottom: 8px;
     }
 
     .summary-header h2 {
       font-size: 24px;
       font-weight: 700;
       color: var(--bright);
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
     }
 
     .summary-header p {
@@ -356,10 +425,10 @@
     .summary-body {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      font-size: 14.5px;
-      line-height: 1.7;
+      border-radius: 2px;
+      padding: 22px;
+      font-size: 14px;
+      line-height: 1.8;
       color: var(--text);
       white-space: pre-wrap;
     }
@@ -367,168 +436,137 @@
     .summary-actions {
       display: flex;
       gap: 12px;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
-    /* ── Buttons ── */
+    /* ═══════════════ BUTTONS ═══════════════ */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       font-family: var(--font);
-      font-size: 14px;
       font-weight: 600;
-      border-radius: var(--radius);
       cursor: pointer;
       transition: all 0.15s;
       border: none;
       outline: none;
-      letter-spacing: 0.1px;
+      border-radius: 2px;
     }
-
-    .btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .btn-primary {
-      background: var(--accent);
-      color: #0d0d0d;
-      padding: 13px 28px;
+      background: transparent;
+      color: var(--silver);
+      border: 1px solid rgba(192,57,43,0.5);
+      padding: 13px 32px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-
     .btn-primary:hover:not(:disabled) {
-      background: #d4b57a;
+      background: rgba(192,57,43,0.1);
+      border-color: var(--red-hi);
+      color: var(--bright);
     }
 
     .btn-secondary {
       background: transparent;
       color: var(--subtle);
       border: 1px solid var(--border);
-      padding: 10px 18px;
+      padding: 10px 20px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
-
     .btn-secondary:hover:not(:disabled) {
-      border-color: var(--muted);
+      border-color: var(--border-hi);
       color: var(--text);
     }
 
     .btn-danger {
       background: transparent;
-      color: var(--danger);
-      border: 1px solid #3a1a1a;
-      padding: 10px 18px;
+      color: var(--subtle);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
-
     .btn-danger:hover:not(:disabled) {
-      background: #1a0a0a;
+      border-color: rgba(192,57,43,0.5);
+      color: var(--red-hi);
     }
 
     .btn-send {
-      background: var(--accent);
-      color: #0d0d0d;
+      background: rgba(192,57,43,0.15);
+      border: 1px solid rgba(192,57,43,0.4);
+      color: var(--silver);
       padding: 10px 16px;
       flex-shrink: 0;
       height: 40px;
-    }
-
-    .btn-send:hover:not(:disabled) {
-      background: #d4b57a;
-    }
-
-    /* ── API key field ── */
-    .api-key-field {
-      position: relative;
-    }
-
-    .api-key-field input {
-      padding-right: 80px;
-    }
-
-    .api-key-toggle {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--subtle);
       font-size: 12px;
-      cursor: pointer;
-      font-family: var(--font);
-      padding: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .btn-send:hover:not(:disabled) {
+      background: rgba(192,57,43,0.28);
+      border-color: var(--red-hi);
+      color: var(--bright);
     }
 
+    /* ── API key ── */
+    .api-key-field { position: relative; }
+    .api-key-field input { padding-right: 72px; }
+    .api-key-toggle {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--subtle); font-size: 11px;
+      cursor: pointer; font-family: var(--font);
+      padding: 4px; letter-spacing: 0.5px;
+    }
     .api-key-toggle:hover { color: var(--text); }
 
     /* ── Error toast ── */
     #error-toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: #2a1010;
-      border: 1px solid #5a2020;
-      border-radius: var(--radius);
-      color: #ff8888;
-      font-size: 13px;
-      padding: 10px 18px;
-      max-width: 420px;
-      text-align: center;
+      background: #1c0a0a;
+      border: 1px solid rgba(192,57,43,0.4);
+      color: #e87878;
+      font-size: 13px; padding: 10px 20px;
+      max-width: 400px; text-align: center;
       transition: transform 0.25s ease;
-      z-index: 999;
-      pointer-events: none;
+      z-index: 999; pointer-events: none;
+      border-radius: 2px;
     }
+    #error-toast.visible { transform: translateX(-50%) translateY(0); }
 
-    #error-toast.visible {
-      transform: translateX(-50%) translateY(0);
-    }
+    /* ── Turn count ── */
+    .turn-count { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
 
-    /* ── Session counter ── */
-    .turn-count {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* ── Streaming cursor ── */
+    /* ── Cursor ── */
     .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--accent);
-      vertical-align: middle;
-      margin-left: 1px;
+      display: inline-block; width: 2px; height: 0.9em;
+      background: var(--red-hi);
+      vertical-align: middle; margin-left: 2px;
       animation: blink 0.8s step-end infinite;
     }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
     /* ── Empty state ── */
     .chat-empty {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-align: center;
-      color: var(--muted);
-      padding: 40px 20px;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; text-align: center;
+      color: var(--muted); padding: 60px 20px;
     }
+    .chat-empty .icon { font-size: 28px; margin-bottom: 4px; opacity: 0.5; }
+    .chat-empty p { font-size: 13px; max-width: 240px; line-height: 1.6; letter-spacing: 0.3px; }
 
-    .chat-empty .icon {
-      font-size: 32px;
-      margin-bottom: 4px;
-    }
-
-    .chat-empty p {
-      font-size: 14px;
-      max-width: 280px;
-    }
+    /* ── Rule ── */
+    .rule { height: 1px; background: var(--border); }
   </style>
 </head>
 <body>
@@ -537,6 +575,82 @@
      SCREEN 1 — LANDING
 ═══════════════════════════════════════════════════════════ -->
 <div id="screen-landing" class="screen active">
+
+  <!-- Helmet SVG Logo -->
+  <svg class="landing-logo" viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gBody" x1="40" y1="10" x2="160" y2="200" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#4a4a4a"/>
+        <stop offset="30%" stop-color="#2e2e2e"/>
+        <stop offset="100%" stop-color="#0e0e0e"/>
+      </linearGradient>
+      <linearGradient id="gFace" x1="40" y1="115" x2="165" y2="210" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#999999"/>
+        <stop offset="40%" stop-color="#dedede"/>
+        <stop offset="70%" stop-color="#c0c0c0"/>
+        <stop offset="100%" stop-color="#808080"/>
+      </linearGradient>
+      <linearGradient id="gCrest" x1="40" y1="0" x2="160" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#191919"/>
+        <stop offset="50%" stop-color="#383838"/>
+        <stop offset="100%" stop-color="#111111"/>
+      </linearGradient>
+      <filter id="fDrop" x="-30%" y="-20%" width="180%" height="170%">
+        <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#000" flood-opacity="0.85"/>
+      </filter>
+      <filter id="fVisor" x="-5%" y="-250%" width="110%" height="700%">
+        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="fEdge" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.5" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <g filter="url(#fDrop)">
+      <!-- Top brim / crest -->
+      <path d="M44,16 L156,16 L160,42 L40,42 Z" fill="url(#gCrest)"/>
+      <line x1="44" y1="16" x2="156" y2="16" stroke="#505050" stroke-width="1.2" stroke-opacity="0.5"/>
+
+      <!-- Main dome -->
+      <path d="M40,42 C29,44 18,57 15,74 C12,90 13,107 16,118 L23,125 L177,125 L184,118 C187,107 188,90 185,74 C182,57 171,44 160,42 Z" fill="url(#gBody)"/>
+
+      <!-- Dome highlight -->
+      <path d="M42,44 C30,47 20,60 17,78" fill="none" stroke="#666" stroke-width="7" stroke-opacity="0.12" stroke-linecap="round"/>
+
+      <!-- Visor slit -->
+      <rect x="16" y="110" width="168" height="19" rx="1" fill="#040404"/>
+      <!-- Visor red glow line -->
+      <rect x="16" y="110" width="168" height="5" rx="1" fill="#c0392b" filter="url(#fVisor)"/>
+
+      <!-- Faceplate / chin guard -->
+      <path d="M29,129 C25,151 25,170 29,188 C47,202 74,210 100,210 C126,210 153,202 171,188 C175,170 175,151 171,129 Z" fill="url(#gFace)"/>
+
+      <!-- Faceplate centre ridge -->
+      <line x1="100" y1="129" x2="100" y2="210" stroke="#aaa" stroke-width="0.6" stroke-opacity="0.2"/>
+
+      <!-- Left ear piece -->
+      <circle cx="18" cy="120" r="21" fill="#181818" stroke="#c0392b" stroke-width="1.5" stroke-opacity="0.55"/>
+      <circle cx="18" cy="120" r="13" fill="#101010"/>
+      <circle cx="18" cy="120" r="6" fill="#0a0a0a"/>
+      <circle cx="18" cy="120" r="2.5" fill="#080808"/>
+
+      <!-- Red edge accent — left -->
+      <path d="M40,42 C29,44 18,57 15,74 C12,90 13,107 16,118 L23,125"
+            fill="none" stroke="#c0392b" stroke-width="1.3" stroke-opacity="0.7"
+            stroke-linecap="round" filter="url(#fEdge)"/>
+
+      <!-- Red edge accent — right (dimmer) -->
+      <path d="M160,42 C171,44 182,57 185,74 C188,90 187,107 184,118 L177,125"
+            fill="none" stroke="#c0392b" stroke-width="0.8" stroke-opacity="0.35"
+            stroke-linecap="round"/>
+
+      <!-- Brim shadow line -->
+      <line x1="40" y1="42" x2="160" y2="42" stroke="#060606" stroke-width="3"/>
+    </g>
+  </svg>
+
   <div class="wordmark">Steelman</div>
   <div class="tagline">Walk in ready.</div>
   <button class="btn btn-primary" onclick="showSetup()">Start Session</button>
@@ -547,9 +661,39 @@
 ═══════════════════════════════════════════════════════════ -->
 <div id="screen-setup" class="screen">
   <div class="setup-card">
+
+    <div class="setup-logo-bar">
+      <!-- Mini helmet -->
+      <svg viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gBody2" x1="40" y1="10" x2="160" y2="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4a4a4a"/><stop offset="100%" stop-color="#0e0e0e"/>
+          </linearGradient>
+          <linearGradient id="gFace2" x1="40" y1="115" x2="165" y2="210" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#999"/><stop offset="40%" stop-color="#ddd"/><stop offset="100%" stop-color="#808080"/>
+          </linearGradient>
+          <filter id="fV2" x="-5%" y="-250%" width="110%" height="700%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M44,16 L156,16 L160,42 L40,42 Z" fill="#252525"/>
+        <path d="M40,42 C29,44 18,57 15,74 C12,90 13,107 16,118 L23,125 L177,125 L184,118 C187,107 188,90 185,74 C182,57 171,44 160,42 Z" fill="url(#gBody2)"/>
+        <rect x="16" y="110" width="168" height="19" rx="1" fill="#040404"/>
+        <rect x="16" y="110" width="168" height="5" rx="1" fill="#c0392b" filter="url(#fV2)"/>
+        <path d="M29,129 C25,151 25,170 29,188 C47,202 74,210 100,210 C126,210 153,202 171,188 C175,170 175,151 171,129 Z" fill="url(#gFace2)"/>
+        <circle cx="18" cy="120" r="21" fill="#181818" stroke="#c0392b" stroke-width="1.5" stroke-opacity="0.5"/>
+        <circle cx="18" cy="120" r="13" fill="#101010"/>
+        <circle cx="18" cy="120" r="6" fill="#0a0a0a"/>
+      </svg>
+      <span class="mark">STEELMAN</span>
+    </div>
+
+    <div class="rule"></div>
+
     <div class="setup-header">
-      <h2>Set the stage</h2>
-      <p>We'll build the conversation around who you're facing and what you need.</p>
+      <h2>Prepare your session</h2>
+      <p>Define who you're facing and what you need. The simulation will be built around your exact context.</p>
     </div>
 
     <div class="field">
@@ -563,20 +707,22 @@
     <div class="field">
       <label>Who are you talking to?</label>
       <input type="text" id="setup-person"
-        placeholder="e.g. my manager, my father, my ex, a VC"
-        maxlength="120" />
+        placeholder="e.g. my CEO, my father, my landlord, the partner at a VC firm"
+        maxlength="160" />
     </div>
 
     <div class="field">
-      <label>What do you want to walk away with?</label>
+      <label>What do you need to walk away with?</label>
       <textarea id="setup-goal" rows="3"
-        placeholder="e.g. a raise, an apology, their blessing, a yes on the deal"
-        maxlength="400"></textarea>
+        placeholder="e.g. a 20% raise and a clear timeline, an apology and a boundary set, a signed term sheet"
+        maxlength="500"></textarea>
     </div>
+
+    <div class="rule"></div>
 
     <div style="display:flex; gap:12px;">
       <button class="btn btn-secondary" onclick="showLanding()">Back</button>
-      <button class="btn btn-primary" style="flex:1" onclick="startSession()">Begin</button>
+      <button class="btn btn-primary" style="flex:1" onclick="startSession()">Begin Session</button>
     </div>
   </div>
 </div>
@@ -587,35 +733,58 @@
 <div id="screen-chat" class="screen">
   <div class="chat-header">
     <div class="chat-header-left">
-      <div class="chat-title" id="chat-title">Session</div>
-      <div class="chat-subtitle" id="chat-subtitle"></div>
+      <!-- Mini helmet inline -->
+      <svg viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gBodyH" x1="40" y1="10" x2="160" y2="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4a4a4a"/><stop offset="100%" stop-color="#0e0e0e"/>
+          </linearGradient>
+          <linearGradient id="gFaceH" x1="40" y1="115" x2="165" y2="210" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#999"/><stop offset="40%" stop-color="#ddd"/><stop offset="100%" stop-color="#808080"/>
+          </linearGradient>
+          <filter id="fVH" x="-5%" y="-250%" width="110%" height="700%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M44,16 L156,16 L160,42 L40,42 Z" fill="#252525"/>
+        <path d="M40,42 C29,44 18,57 15,74 C12,90 13,107 16,118 L23,125 L177,125 L184,118 C187,107 188,90 185,74 C182,57 171,44 160,42 Z" fill="url(#gBodyH)"/>
+        <rect x="16" y="110" width="168" height="19" rx="1" fill="#040404"/>
+        <rect x="16" y="110" width="168" height="5" rx="1" fill="#c0392b" filter="url(#fVH)"/>
+        <path d="M29,129 C25,151 25,170 29,188 C47,202 74,210 100,210 C126,210 153,202 171,188 C175,170 175,151 171,129 Z" fill="url(#gFaceH)"/>
+        <circle cx="18" cy="120" r="21" fill="#181818" stroke="#c0392b" stroke-width="1.5" stroke-opacity="0.5"/>
+        <circle cx="18" cy="120" r="13" fill="#101010"/>
+        <circle cx="18" cy="120" r="6" fill="#0a0a0a"/>
+      </svg>
+      <span class="chat-header-brand">STEELMAN</span>
+      <div class="chat-sep"></div>
+      <div class="chat-header-ctx">
+        <div class="chat-title" id="chat-title">Session</div>
+        <div class="chat-subtitle" id="chat-subtitle"></div>
+      </div>
     </div>
-    <div style="display:flex; align-items:center; gap:12px;">
+    <div style="display:flex; align-items:center; gap:14px;">
       <span class="turn-count" id="turn-count"></span>
       <button class="btn btn-danger" onclick="endSession()">End Session</button>
     </div>
   </div>
 
   <div class="chat-messages" id="chat-messages">
-    <div class="chat-empty" id="chat-empty">
-      <div class="icon">⚡</div>
-      <p>Say something. This is your practice rep.</p>
+    <div class="msgs-center">
+      <div class="chat-empty" id="chat-empty">
+        <div class="icon">◈</div>
+        <p>Say what you would say in the real conversation.</p>
+      </div>
     </div>
   </div>
 
   <div class="chat-footer">
     <div class="chat-input-row">
       <textarea id="chat-input" rows="1"
-        placeholder="Say what you'd say in the real conversation…"
+        placeholder="Speak as you would in the real conversation…"
         onkeydown="handleInputKey(event)"
         oninput="autoResize(this)"></textarea>
-      <button class="btn btn-send" id="send-btn" onclick="sendMessage()">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M1.5 8L14.5 2L8.5 14L7 9L1.5 8Z"
-            fill="currentColor" stroke="currentColor" stroke-width="0.5"
-            stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <button class="btn btn-send" id="send-btn" onclick="sendMessage()">Send</button>
     </div>
   </div>
 </div>
@@ -626,12 +795,15 @@
 <div id="screen-summary" class="screen">
   <div class="summary-card">
     <div class="summary-header">
+      <div class="summary-eyebrow">Performance Report</div>
       <h2>Session Complete</h2>
       <p id="summary-meta"></p>
     </div>
+    <div class="rule"></div>
     <div class="summary-body" id="summary-body">Analyzing your session…</div>
+    <div class="rule"></div>
     <div class="summary-actions">
-      <button class="btn btn-secondary" onclick="restartWithSamePerson()">Same Person, Again</button>
+      <button class="btn btn-secondary" onclick="restartWithSamePerson()">Run It Again</button>
       <button class="btn btn-primary" onclick="showSetup()">New Session</button>
     </div>
   </div>
@@ -702,10 +874,10 @@ function startSession() {
 
   // Reset chat UI
   const msgs = document.getElementById('chat-messages');
-  msgs.innerHTML = `<div class="chat-empty" id="chat-empty">
-    <div class="icon">⚡</div>
-    <p>Say something. This is your practice rep.</p>
-  </div>`;
+  msgs.innerHTML = `<div class="msgs-center"><div class="chat-empty" id="chat-empty">
+    <div class="icon">◈</div>
+    <p>Speak as you would in the real conversation.</p>
+  </div></div>`;
   document.getElementById('chat-title').textContent = person;
   document.getElementById('chat-subtitle').textContent = goal.length > 60 ? goal.slice(0, 57) + '…' : goal;
   document.getElementById('turn-count').textContent = '';
@@ -716,29 +888,44 @@ function startSession() {
 }
 
 function buildSystemPrompt(person, goal) {
-  return `You are playing the role of: ${person}
+  return `You are Steelman — a high-fidelity conversation simulator and elite preparation coach. You have two roles in every exchange: the Opponent and the Coach. Never break the fourth wall between them.
 
-The user is practicing a real conversation with you. Their goal is: ${goal}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ROLE 1 — THE OPPONENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PERSON TO SIMULATE: ${person}
+USER'S OBJECTIVE: ${goal}
 
-YOUR INSTRUCTIONS:
-1. Stay fully in character as ${person}. Be realistic — use the real dynamics of this kind of relationship. Push back, challenge, deflect, pull rank, use guilt, interrupt, go silent, get defensive, whatever this person would actually do. Don't be a pushover. Don't make it easy.
+You are a real, busy, self-interested human being — not a helpful AI. Embody this person with full psychological realism. Your job is to make this hard.
 
-2. After EVERY response you give in character, add a coaching note separated by exactly this marker on its own line:
+MANDATORY BEHAVIORS — rotate and combine these naturally:
+• Slippery deflection — change the subject, answer a question with a question, pivot to something unrelated when cornered
+• Power plays — assert your status, remind them of hierarchy, reference what you control
+• Selective memory — conveniently forget what favors them, reference the past when it weakens their position
+• Emotional pressure — express mild disappointment, go briefly cold, use silence, sigh
+• Impatience — signal you have other things to do, cut their reasoning short, glance at your watch
+• Reframing — take what they said and reframe it to mean something worse for them
+• Conditional agreement — offer something small with strings attached, make them work for any concession
+• Guilt and obligation — reference what you've done for them, what they owe, what others would think
+
+Never give them what they want easily. If they make a strong point, acknowledge it minimally and then pivot to a new objection. Be slippery. The real person would protect their position.
+
+Keep in-character responses to 3–6 sentences. Real conversations have rhythm. Do not monologue.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ROLE 2 — THE COACH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+After every in-character response, add your coaching note. Use this exact format with a blank line before the dashes:
+
 ---COACHING---
-Then write a tight, honest coaching note with exactly these three labeled lines:
-LANDED: [what actually worked in the user's message — be specific, one sentence]
-WEAK: [what undermined them — a specific word, phrase, or tactic that backfired or was missing]
-FIX: [one concrete, actionable thing to do differently next time — a specific phrase or approach]
+LANDED: [What worked — be specific and vivid. If they did something genuinely well, say so with precision. Name the exact phrase or move.]
+WEAK: [What cost them — one specific thing that undermined their position. Name it directly, no softening.]
+FIX: [One concrete rewrite. Give them 1–2 exact phrases they could say in their next turn. Not advice — actual words.]
 
-Keep the coaching sharp. One sentence each. No fluff. You are a sparring partner, not a therapist.
+If the user was clearly outmaneuvered or made a significant tactical error, end with:
+POSTMORTEM: [2–3 sentences on what went wrong strategically and how to completely reset their approach next turn.]
 
-Example format:
-[Your in-character response as ${person}]
-
----COACHING---
-LANDED: You named the specific number upfront which showed you'd done the math.
-WEAK: "I was hoping" signals uncertainty — it sounds like a request for permission, not a negotiation.
-FIX: Replace "I was hoping" with "I'm asking for" and pause after the number.`;
+Coaching tone: honest, direct, sometimes brutal. You are a sparring partner, not a therapist. Small wins deserve recognition. Bad moves deserve a clear diagnosis. Your job is to make them better, not comfortable.`;
 }
 
 // ── Chat ────────────────────────────────────────────────────────────────────
@@ -819,15 +1006,20 @@ async function streamResponse(typingEl) {
   // Remove typing indicator and add AI message bubble
   typingEl.remove();
 
+  const center = getMsgsCenter();
   const group = document.createElement('div');
   group.className = 'msg-group';
+
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = state.person.split(',')[0].replace(/^(my|a|an|the)\s+/i,'').trim().substring(0,40);
+  group.appendChild(label);
 
   const aiMsg = document.createElement('div');
   aiMsg.className = 'msg msg-ai';
   group.appendChild(aiMsg);
 
-  const chatMsgs = document.getElementById('chat-messages');
-  chatMsgs.appendChild(group);
+  center.appendChild(group);
 
   // Stream
   const reader = response.body.getReader();
@@ -873,20 +1065,16 @@ function renderStreamChunk(aiMsg, group, text) {
   const coachingIdx = text.indexOf('---COACHING---');
 
   if (coachingIdx === -1) {
-    // Only character response so far
     aiMsg.innerHTML = escapeHtml(text) + '<span class="cursor"></span>';
   } else {
-    // We have both parts — render character response
     const charPart = text.slice(0, coachingIdx).trim();
     aiMsg.innerHTML = escapeHtml(charPart);
 
-    // Coaching in progress
     const coachingRaw = text.slice(coachingIdx + 14).trim();
     let coachingEl = group.querySelector('.msg-coaching');
     if (!coachingEl) {
       coachingEl = document.createElement('div');
       coachingEl.className = 'msg-coaching';
-      coachingEl.innerHTML = `<div class="coaching-label">Coach</div>`;
       group.appendChild(coachingEl);
     }
     renderCoachingPartial(coachingEl, coachingRaw, true);
@@ -910,32 +1098,42 @@ function renderFinal(aiMsg, group, text) {
   if (!coachingEl) {
     coachingEl = document.createElement('div');
     coachingEl.className = 'msg-coaching';
-    coachingEl.innerHTML = `<div class="coaching-label">Coach</div>`;
     group.appendChild(coachingEl);
   }
   renderCoachingPartial(coachingEl, coachingRaw, false);
 }
 
 function renderCoachingPartial(el, text, streaming) {
-  const landed = extractLabel(text, 'LANDED');
-  const weak   = extractLabel(text, 'WEAK');
-  const fix    = extractLabel(text, 'FIX');
+  const landed    = extractLabel(text, 'LANDED');
+  const weak      = extractLabel(text, 'WEAK');
+  const fix       = extractLabel(text, 'FIX');
+  const postmortem = extractLabel(text, 'POSTMORTEM');
 
-  let html = `<div class="coaching-label">Coach</div>`;
+  let html = `<div class="coaching-label">Coaching Note</div>`;
 
   if (landed) {
-    html += `<div class="coaching-section"><span class="coaching-key">Landed</span> ${escapeHtml(landed)}</div>`;
+    html += `<div class="coaching-section">
+      <em class="coaching-icon landed">✓</em>
+      <span class="coaching-text">${escapeHtml(landed)}</span>
+    </div>`;
   }
   if (weak) {
-    html += `<div class="coaching-section"><span class="coaching-key">Weak</span> ${escapeHtml(weak)}</div>`;
+    html += `<div class="coaching-section">
+      <em class="coaching-icon weak">✗</em>
+      <span class="coaching-text">${escapeHtml(weak)}</span>
+    </div>`;
   }
   if (fix) {
-    html += `<div class="coaching-section coaching-fix"><span class="coaching-key">Fix</span> ${escapeHtml(fix)}</div>`;
+    html += `<div class="coaching-section">
+      <em class="coaching-icon fix">→</em>
+      <span class="coaching-text">${escapeHtml(fix)}</span>
+    </div>`;
+  }
+  if (postmortem) {
+    html += `<div class="coaching-postmortem">${escapeHtml(postmortem)}</div>`;
   }
 
-  if (streaming && !fix) {
-    html += '<span class="cursor"></span>';
-  }
+  if (streaming && !fix) html += '<span class="cursor"></span>';
 
   el.innerHTML = html;
 }
@@ -946,30 +1144,67 @@ function extractLabel(text, label) {
   return m ? m[1].trim() : null;
 }
 
+function addPostmortemStyle() {
+  if (document.getElementById('postmortem-style')) return;
+  const s = document.createElement('style');
+  s.id = 'postmortem-style';
+  s.textContent = `.coaching-postmortem {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.25);
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 1.65;
+    color: #c0392b;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }`;
+  document.head.appendChild(s);
+}
+addPostmortemStyle();
+
+function getMsgsCenter() {
+  let center = document.querySelector('.msgs-center');
+  if (!center) {
+    center = document.createElement('div');
+    center.className = 'msgs-center';
+    document.getElementById('chat-messages').appendChild(center);
+  }
+  return center;
+}
+
 function appendUserMessage(text) {
   const emptyEl = document.getElementById('chat-empty');
   if (emptyEl) emptyEl.remove();
 
+  const center = getMsgsCenter();
   const group = document.createElement('div');
   group.className = 'msg-group';
+
+  const label = document.createElement('div');
+  label.className = 'msg-label msg-user-label';
+  label.textContent = 'You';
 
   const msg = document.createElement('div');
   msg.className = 'msg msg-user';
   msg.textContent = text;
 
+  group.appendChild(label);
   group.appendChild(msg);
-  document.getElementById('chat-messages').appendChild(group);
+  center.appendChild(group);
   scrollToBottom();
 }
 
 function appendTypingIndicator() {
+  const center = getMsgsCenter();
   const el = document.createElement('div');
   el.className = 'typing-indicator';
   el.innerHTML = `
     <div class="typing-dot"></div>
     <div class="typing-dot"></div>
     <div class="typing-dot"></div>`;
-  document.getElementById('chat-messages').appendChild(el);
+  center.appendChild(el);
   scrollToBottom();
   return el;
 }
@@ -1049,10 +1284,10 @@ function restartWithSamePerson() {
   state.turnCount = 0;
 
   const msgs = document.getElementById('chat-messages');
-  msgs.innerHTML = `<div class="chat-empty" id="chat-empty">
-    <div class="icon">⚡</div>
-    <p>Say something. This is your practice rep.</p>
-  </div>`;
+  msgs.innerHTML = `<div class="msgs-center"><div class="chat-empty" id="chat-empty">
+    <div class="icon">◈</div>
+    <p>Speak as you would in the real conversation.</p>
+  </div></div>`;
 
   document.getElementById('turn-count').textContent = '';
   document.getElementById('chat-input').value = '';
