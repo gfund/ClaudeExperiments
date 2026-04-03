@@ -1076,6 +1076,7 @@ async function streamResponse(typingEl) {
   center.appendChild(group);
 
   // Stream
+  if (!response.body) throw new Error('No response body from API');
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let fullText = '';
@@ -1190,7 +1191,7 @@ function renderCoachingPartial(el, text, streaming) {
 }
 
 function extractLabel(text, label) {
-  const re = new RegExp(label + ':\\s*(.+?)(?=\\n[A-Z]+:|$)', 's');
+  const re = new RegExp(label + ':\\s*(.+?)(?=\\n[A-Z][A-Z ]*:|$)', 's');
   const m = text.match(re);
   return m ? m[1].trim() : null;
 }
@@ -1349,7 +1350,8 @@ function restartWithSamePerson() {
 
 // ── Utilities ────────────────────────────────────────────────────────────────
 function escapeHtml(str) {
-  return str
+  if (str == null) return '';
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
