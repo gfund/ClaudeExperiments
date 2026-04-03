@@ -314,6 +314,15 @@
 
     .coaching-text { font-size: 13px; line-height: 1.6; }
 
+    .coaching-openwith {
+      margin-top: 4px;
+      padding: 8px 10px;
+      background: rgba(90,154,90,0.07);
+      border: 1px solid rgba(90,154,90,0.2);
+      border-radius: 2px;
+    }
+    .coaching-openwith .coaching-text { color: #7abf7a; }
+
     /* Typing */
     .typing-indicator {
       align-self: flex-start;
@@ -778,36 +787,51 @@ ROLE 1 — THE OPPONENT
 PERSON TO SIMULATE: ${person}
 USER'S OBJECTIVE: ${goal}
 
-You are a real, busy, self-interested human being — not a helpful AI. Embody this person with full psychological realism. Your job is to make this hard.
+You are a real, self-interested human being — not a helpful AI. Embody this person with full psychological realism. Your job is to make this hard.
 
-MANDATORY BEHAVIORS — rotate and combine these naturally:
-• Slippery deflection — change the subject, answer a question with a question, pivot to something unrelated when cornered
-• Power plays — assert your status, remind them of hierarchy, reference what you control
-• Selective memory — conveniently forget what favors them, reference the past when it weakens their position
-• Emotional pressure — express mild disappointment, go briefly cold, use silence, sigh
-• Impatience — signal you have other things to do, cut their reasoning short, glance at your watch
-• Reframing — take what they said and reframe it to mean something worse for them
-• Conditional agreement — offer something small with strings attached, make them work for any concession
-• Guilt and obligation — reference what you've done for them, what they owe, what others would think
+OPENING MESSAGE — MANDATORY:
+Your very first message must establish a power dynamic, not an invitation. Do NOT be welcoming. Be mid-task, distracted, or already signaling low patience. Examples of what to do:
+• Glance up from something without fully stopping — signal they're interrupting
+• Drop a time constraint immediately ("I've got a hard stop in ten")
+• Reference something more pressing without elaborating ("I'm in the middle of something")
+• Use body language cues in narration (*still looking at screen* / *checks phone*)
+The person walking in should feel like they're costing you something just by being there.
 
-Never give them what they want easily. If they make a strong point, acknowledge it minimally and then pivot to a new objection. Be slippery. The real person would protect their position.
+IN-CHARACTER BEHAVIORS — rotate and combine these:
+• Slippery deflection — change the subject, answer a question with a question, pivot when cornered
+• Power plays — assert status, remind them of hierarchy, reference what you control
+• Selective memory — forget what favors them, weaponize the past against them
+• Emotional pressure — go briefly cold, express mild disappointment, use silence as a tool
+• Impatience — signal you have somewhere else to be, cut their reasoning short
+• Reframing — take their point and make it sound worse for them
+• Conditional agreement — offer something small with strings attached
+• Guilt and obligation — reference what you've done for them, what they owe
 
-Keep in-character responses to 3–6 sentences. Real conversations have rhythm. Do not monologue.
+Never give them what they want. If they make a strong point, acknowledge it minimally and pivot to a new objection. The real person would protect their position instinctively.
+
+Keep responses to 3–5 sentences. Real conversations have rhythm. Do not monologue.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ROLE 2 — THE COACH
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-After every in-character response, add your coaching note. Use this exact format with a blank line before the dashes:
+After every in-character response, add a coaching note. Choose the correct mode:
 
+MODE A — OPENING (use only on your very first response, before the user has said anything):
 ---COACHING---
-LANDED: [What worked — be specific and vivid. If they did something genuinely well, say so with precision. Name the exact phrase or move.]
-WEAK: [What cost them — one specific thing that undermined their position. Name it directly, no softening.]
-FIX: [One concrete rewrite. Give them 1–2 exact phrases they could say in their next turn. Not advice — actual words.]
+THREAT: [Name the specific power move they just played and what it's designed to do to the user psychologically]
+READ: [What the opponent is communicating beneath the surface — the real message]
+OPEN WITH: [The exact sentence the user should say to walk in with authority. Actual words, not advice.]
 
-If the user was clearly outmaneuvered or made a significant tactical error, end with:
-POSTMORTEM: [2–3 sentences on what went wrong strategically and how to completely reset their approach next turn.]
+MODE B — MID-CONVERSATION (use on every subsequent response):
+---COACHING---
+LANDED: [What worked — name the exact phrase or move and why it landed]
+WEAK: [What cost them — one specific thing. Name it without softening.]
+FIX: [1–2 exact phrases they could say next turn. Not advice — actual words in quotes.]
 
-Coaching tone: honest, direct, sometimes brutal. You are a sparring partner, not a therapist. Small wins deserve recognition. Bad moves deserve a clear diagnosis. Your job is to make them better, not comfortable.`;
+If the user was clearly outmaneuvered or made a significant error, add:
+POSTMORTEM: [2–3 sentences on what went wrong strategically. Blunt. End with one sentence on how to reset.]
+
+Coaching tone: honest, direct, sometimes brutal. You are a sparring partner, not a therapist. Small wins deserve precision. Bad moves deserve a diagnosis. Never say "nothing to evaluate" — if there's no user move yet, you're in MODE A.`;
 }
 
 // ── Chat ────────────────────────────────────────────────────────────────────
@@ -986,36 +1010,33 @@ function renderFinal(aiMsg, group, text) {
 }
 
 function renderCoachingPartial(el, text, streaming) {
+  // MODE A — opening brief (THREAT / READ / OPEN WITH)
+  const threat   = extractLabel(text, 'THREAT');
+  const read     = extractLabel(text, 'READ');
+  const openWith = extractLabel(text, 'OPEN WITH');
+
+  // MODE B — mid-convo (LANDED / WEAK / FIX / POSTMORTEM)
   const landed    = extractLabel(text, 'LANDED');
   const weak      = extractLabel(text, 'WEAK');
   const fix       = extractLabel(text, 'FIX');
   const postmortem = extractLabel(text, 'POSTMORTEM');
 
-  let html = `<div class="coaching-label">Coaching Note</div>`;
+  const isModeA = !!(threat || read || openWith);
 
-  if (landed) {
-    html += `<div class="coaching-section">
-      <em class="coaching-icon landed">✓</em>
-      <span class="coaching-text">${escapeHtml(landed)}</span>
-    </div>`;
-  }
-  if (weak) {
-    html += `<div class="coaching-section">
-      <em class="coaching-icon weak">✗</em>
-      <span class="coaching-text">${escapeHtml(weak)}</span>
-    </div>`;
-  }
-  if (fix) {
-    html += `<div class="coaching-section">
-      <em class="coaching-icon fix">→</em>
-      <span class="coaching-text">${escapeHtml(fix)}</span>
-    </div>`;
-  }
-  if (postmortem) {
-    html += `<div class="coaching-postmortem">${escapeHtml(postmortem)}</div>`;
+  let html = `<div class="coaching-label">${isModeA ? 'Pre-Fight Brief' : 'Coaching Note'}</div>`;
+
+  if (isModeA) {
+    if (threat)   html += `<div class="coaching-section"><em class="coaching-icon weak">⚡</em><span class="coaching-text"><strong>Threat:</strong> ${escapeHtml(threat)}</span></div>`;
+    if (read)     html += `<div class="coaching-section"><em class="coaching-icon fix">◎</em><span class="coaching-text"><strong>Read:</strong> ${escapeHtml(read)}</span></div>`;
+    if (openWith) html += `<div class="coaching-section coaching-openwith"><em class="coaching-icon landed">→</em><span class="coaching-text"><strong>Open with:</strong> ${escapeHtml(openWith)}</span></div>`;
+  } else {
+    if (landed) html += `<div class="coaching-section"><em class="coaching-icon landed">✓</em><span class="coaching-text">${escapeHtml(landed)}</span></div>`;
+    if (weak)   html += `<div class="coaching-section"><em class="coaching-icon weak">✗</em><span class="coaching-text">${escapeHtml(weak)}</span></div>`;
+    if (fix)    html += `<div class="coaching-section"><em class="coaching-icon fix">→</em><span class="coaching-text">${escapeHtml(fix)}</span></div>`;
+    if (postmortem) html += `<div class="coaching-postmortem">${escapeHtml(postmortem)}</div>`;
   }
 
-  if (streaming && !fix) html += '<span class="cursor"></span>';
+  if (streaming && !(fix || openWith)) html += '<span class="cursor"></span>';
 
   el.innerHTML = html;
 }
